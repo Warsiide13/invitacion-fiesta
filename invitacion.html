@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>M & J | The Experience</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CONFIGURACIÓN BASE */
+        body, html {
+            margin: 0; padding: 0;
+            background-color: #030303;
+            color: #ffffff;
+            font-family: 'Cinzel', serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* PANTALLA DE INICIO (CARTA BLANCO Y NEGRO) */
+        #intro-screen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: #0a0a0a;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1.5s ease, visibility 1.5s;
+        }
+
+        #intro-screen::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://www.dropbox.com/scl/fi/ud1q1raa4y9puuvnt7v6k/IMAGEN2.png?rlkey=grkyxx2efg541cj2eu21gswxd&st=5jcxylpp&raw=1');
+            background-size: cover;
+            background-position: center;
+            filter: grayscale(100%);
+            z-index: -2;
+        }
+        
+        #intro-screen::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.75);
+            backdrop-filter: blur(8px);
+            z-index: -1;
+        }
+
+        .envelope-box {
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 50px 40px;
+            background: rgba(0, 0, 0, 0.85);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.05);
+            max-width: 400px;
+            width: 80%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.5s ease;
+        }
+
+        .envelope-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .icon-letter {
+            width: 70px;
+            height: 70px;
+            margin-bottom: 30px;
+            color: #ffffff;
+            animation: floating 3s ease-in-out infinite;
+            transition: transform 0.4s ease;
+        }
+
+        .envelope-box:hover .icon-letter {
+            transform: scale(1.1) rotate(3deg);
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .intro-hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* CLASE PARA OCULTAR CONTENIDO (Para el retraso de 3 segundos) */
+        .delayed-content {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 2s ease, visibility 2s;
+        }
+        
+        .delayed-content.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* FONDO DE VIDEO */
+        .video-bg-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        #bgVideo {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 100vw; height: 100vh;
+            object-fit: cover;
+            transform: translate(-50%, -50%);
+            filter: grayscale(100%);
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.85));
+            z-index: 1;
+        }
+
+        /* INTERFAZ UI (ESQUINAS) */
+        .ui-layer {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 100;
+            pointer-events: none;
+            padding: 30px;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(0.5rem, 2vw, 0.65rem);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .ui-top { position: absolute; top: 30px; left: 30px; right: 30px; display: flex; justify-content: space-between; }
+        .ui-bottom { position: absolute; bottom: 30px; left: 30px; right: 30px; display: flex; justify-content: space-between; align-items: flex-end; }
+
+        /* REPRODUCTOR DE SONIDO */
+        .music-player {
+            pointer-events: auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .music-player:hover { background: rgba(255, 255, 255, 0.2); }
+        .visualizer { display: flex; gap: 3px; align-items: flex-end; height: 15px; }
+        .bar { width: 3px; background: #fff; animation: bounce 1s infinite alternate; }
+        .bar:nth-child(2) { animation-delay: 0.2s; }
+        .bar:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes bounce { from { height: 3px; } to { height: 15px; } }
+        .paused .bar { animation: none; height: 3px; }
+
+        /* SECCIONES DE SCROLL */
+        .scroll-container { position: relative; z-index: 10; }
+        .slide {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .slide-content {
+            will-change: transform, opacity;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 12vw, 6rem);
+            letter-spacing: clamp(5px, 3vw, 15px);
+            font-weight: 400;
+            line-height: 1;
+            text-shadow: 0 10px 50px rgba(0,0,0,0.9);
+            margin: 10px 0;
+        }
+
+        h3 {
+            font-size: clamp(1.5rem, 6vw, 3rem);
+            letter-spacing: clamp(3px, 2vw, 8px);
+            font-weight: 400;
+            color: #ffffff;
+            margin-bottom: 10px;
+            text-shadow: 0 5px 20px rgba(0,0,0,0.8);
+        }
+
+        .p-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(0.7rem, 2.5vw, 1rem);
+            letter-spacing: 3px;
+            margin-top: 15px;
+            opacity: 0.8;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+        }
+
+        .btn {
+            pointer-events: auto;
+            margin-top: 10px;
+            padding: 18px 40px;
+            background: transparent;
+            border: 1px solid #ffffff;
+            color: #ffffff;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.4s;
+            width: 100%;
+            max-width: 300px;
+        }
+        .btn:hover { background: #ffffff; color: #000000; }
+        .btn-bw { border-color: #ffffff; color: #ffffff; }
+
+        /* ESTILOS DE LA CUENTA REGRESIVA */
+        .countdown-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .time-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 15px 10px;
+            min-width: 70px;
+            backdrop-filter: blur(5px);
+        }
+        .time-box span {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+        }
+        .time-box p {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.6rem;
+            letter-spacing: 2px;
+            margin: 5px 0 0 0;
+            opacity: 0.7;
+        }
+        @media (max-width: 500px) {
+            .countdown-wrapper { gap: 8px; }
+            .time-box { min-width: 55px; padding: 10px 5px; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="video-bg-container">
+        <video id="bgVideo" loop playsinline>
+            <source src="https://www.dropbox.com/scl/fi/g93o3du2g85retbl81xk8/Video-Project-5.mp4?rlkey=couiznu8vjhs7z44l0wchgc80&st=00xgqhzz&raw=1" type="video/mp4">
+        </video>
+        <div class="video-overlay"></div>
+    </div>
+
+    <div id="intro-screen">
+        <div class="envelope-box">
+            <div class="icon-letter">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21.2 8.4c.5.38.8.97.8 1.6v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V10a2 2 0 0 1 .8-1.6l8-6a2 2 0 0 1 2.4 0l8 6z"></path>
+                    <polyline points="22.7 8.5 12 16.5 1.3 8.5"></polyline>
+                </svg>
+            </div>
+            <button class="btn btn-bw" onclick="startExperience()">ABRIR INVITACIÓN</button>
+        </div>
+    </div>
+
+    <div class="ui-layer delayed-content" id="main-ui">
+        <div class="ui-top">
+            <span>M & J // 2026</span>
+            <span>INVITACIÓN</span>
+        </div>
+        <div class="ui-bottom">
+            <div class="music-player paused" id="musicBtn" onclick="toggleSound()">
+                <div class="visualizer">
+                    <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                </div>
+                <span id="musicText">SOUND OFF</span>
+            </div>
+            <span>[ SCROLL ]</span>
+        </div>
+    </div>
+
+    <div class="scroll-container delayed-content" id="main-content">
+        
+        <section class="slide">
+            <div class="slide-content">
+                <p class="p-text" style="font-size: 0.7rem;">THE WEDDING OF</p>
+                <h1>MARÍA<br>& JUAN</h1>
+            </div>
+        </section>
+
+        <section class="slide">
+            <div class="slide-content">
+                <p class="p-text">"Freaking out the neighborhood..."</p>
+                <p class="p-text" style="margin-top: 30px;">UNA CELEBRACIÓN DIFERENTE.<br>SIN REGLAS, SOLO AMOR Y BUENA MÚSICA.</p>
+            </div>
+        </section>
+
+        <section class="slide">
+            <div class="slide-content">
+                <h3>NUESTRA HISTORIA</h3>
+                <p class="p-text">Dos caminos que se cruzaron de la manera más inesperada.<br>Hoy, decidimos caminar en la misma dirección para siempre.</p>
+            </div>
+        </section>
+
+        <section class="slide">
+            <div class="slide-content">
+                <h2 style="font-size: 2rem; color:#ffffff; margin-bottom: 20px;">15 . NOV</h2>
+                <h1>ZAPOPAN</h1>
+                <p class="p-text">CEREMONIA | SAN PEDRO APÓSTOL | 4:00 PM<br>RECEPCIÓN | HACIENDA LA ESCOBA | 6:00 PM</p>
+                <button class="btn" style="margin-top: 30px;" onclick="window.open('https://wa.me/523332577128?text=Confirmo%20asistencia')">CONFIRMAR ASISTENCIA</button>
+            </div>
+        </section>
+
+        <section class="slide">
+            <div class="slide-content">
+                <h3>FALTAN</h3>
+                <div class="countdown-wrapper" id="countdown">
+                    <div class="time-box"><span id="days">00</span><p>DÍAS</p></div>
+                    <div class="time-box"><span id="hours">00</span><p>HRS</p></div>
+                    <div class="time-box"><span id="minutes">00</span><p>MIN</p></div>
+                    <div class="time-box"><span id="seconds">00</span><p>SEG</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide">
+            <div class="slide-content">
+                <h3>GUEST DJ</h3>
+                <p class="p-text">La pista de baile nos espera.<br>Contaremos con un DJ invitado en vivo para asegurar que la música y la energía no paren en toda la noche.</p>
+            </div>
+        </section>
+
+        <section class="slide">
+            <div class="slide-content">
+                <h3>DRESS CODE</h3>
+                <p class="p-text">FORMAL / BLACK TIE OPCIONAL<br>Vístete para impresionar y prepárate para bailar toda la noche.</p>
+            </div>
+        </section>
+
+        <section class="slide">
+            <div class="slide-content">
+                <h3>MESA DE REGALOS</h3>
+                <p class="p-text">Su presencia es nuestro regalo más grande.<br>Si desean tener un detalle adicional con nosotros, pueden encontrar opciones a continuación.</p>
+                <button class="btn" style="margin-top: 30px;">VER OPCIONES</button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const video = document.getElementById('bgVideo');
+        const musicBtn = document.getElementById('musicBtn');
+        const musicText = document.getElementById('musicText');
+        const introScreen = document.getElementById('intro-screen');
+        const mainUI = document.getElementById('main-ui');
+        const mainContent = document.getElementById('main-content');
+
+        // FUNCIÓN PARA INICIAR LA EXPERIENCIA
+        function startExperience() {
+            // 1. Ocultar pantalla inicial
+            introScreen.classList.add('intro-hidden');
+            
+            // 2. Reproducir el video con sonido
+            video.muted = false;
+            video.play().then(() => {
+                musicBtn.classList.remove('paused');
+                musicText.innerText = "SOUND ON";
+            }).catch(error => {
+                console.log("El autoplay del video falló: ", error);
+            });
+
+            // 3. Esperar 3 segundos antes de mostrar el contenido
+            setTimeout(() => {
+                mainUI.classList.add('show');
+                mainContent.classList.add('show');
+            }, 3000);
+        }
+
+        // CONTROL MANUAL DE SONIDO DEL VIDEO
+        function toggleSound() {
+            if (video.muted) {
+                video.muted = false;
+                musicBtn.classList.remove('paused');
+                musicText.innerText = "SOUND ON";
+            } else {
+                video.muted = true;
+                musicBtn.classList.add('paused');
+                musicText.innerText = "MUTED";
+            }
+        }
+
+        // LOGICA DE LA CUENTA REGRESIVA
+        // Configura aquí la fecha de la boda (Mes Día, Año Hora)
+        const targetDate = new Date("Nov 15, 2026 16:00:00").getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance < 0) {
+                document.getElementById('countdown').innerHTML = "<p class='p-text'>¡HA LLEGADO EL DÍA!</p>";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = days.toString().padStart(2, '0');
+            document.getElementById("hours").innerText = hours.toString().padStart(2, '0');
+            document.getElementById("minutes").innerText = minutes.toString().padStart(2, '0');
+            document.getElementById("seconds").innerText = seconds.toString().padStart(2, '0');
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown(); // Llamar inmediatamente para evitar que se vea 00 inicial
+
+        // MOTOR DE ANIMACIÓN TEXTO AL HACER SCROLL
+        function animate() {
+            const h = window.innerHeight;
+            
+            document.querySelectorAll('.slide').forEach((slide) => {
+                const rect = slide.getBoundingClientRect();
+                const progress = -rect.top / h;
+                const content = slide.querySelector('.slide-content');
+
+                if (progress > -1.2 && progress < 1.2) {
+                    if (content) {
+                        content.style.opacity = Math.max(0, 1 - Math.abs(progress * 1.5));
+                        content.style.transform = `translateY(${progress * 50}px)`;
+                    }
+                }
+            });
+            requestAnimationFrame(animate);
+        }
+        requestAnimationFrame(animate);
+    </script>
+</body>
+</html>
