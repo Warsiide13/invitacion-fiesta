@@ -274,6 +274,28 @@
             .time-box { min-width: 55px; padding: 10px 5px; }
         }
 
+        /* ANIMACIÓN Y EFECTO NEÓN PARA KEVIN */
+        @keyframes pulse-neon {
+            0% {
+                text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #00ff00, 0 0 30px #00ff00, 0 0 40px #00ff00;
+                transform: scale(1);
+            }
+            50% {
+                text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #39ff14, 0 0 40px #39ff14, 0 0 60px #39ff14, 0 0 80px #39ff14;
+                transform: scale(1.05);
+            }
+            100% {
+                text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #00ff00, 0 0 30px #00ff00, 0 0 40px #00ff00;
+                transform: scale(1);
+            }
+        }
+
+        .neon-pulse {
+            color: #39ff14;
+            display: inline-block;
+            animation: pulse-neon 1.5s infinite ease-in-out;
+        }
+
     </style>
 </head>
 <body>
@@ -299,7 +321,7 @@
 
     <div class="ui-layer delayed-content" id="main-ui">
         <div class="ui-top">
-            <span>M & J // 2026</span>
+            <span>KEVIN FEST // 2026</span>
             <span>INVITACIÓN</span>
         </div>
         <div class="ui-bottom">
@@ -317,8 +339,9 @@
         
         <section class="slide">
             <div class="slide-content">
-                <p class="p-text" style="font-size: 0.7rem;">THE WEDDING OF</p>
-                <h1>MARÍA<br>& JUAN</h1>
+                <p class="p-text" style="font-size: 0.7rem;">VEN Y CELEBRA CONMIGO</p>
+                <!-- AQUÍ SE APLICÓ LA CLASE neon-pulse A KEVIN -->
+                <h1>cumpleaños <span class="neon-pulse">KEVIN</span><br>No. 28!!!</h1>
             </div>
         </section>
 
