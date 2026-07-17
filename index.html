@@ -1,496 +1,818 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KEVIN FEST | The Experience</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
-    
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>¡Mi Pool Party! - Mis 15 Años</title>
+
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Montserrat:wght@400;700&family=Pinyon+Script&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- CDN de GSAP y ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
     <style>
-        /* CONFIGURACIÓN BASE */
-        body, html {
-            margin: 0; padding: 0;
-            background-color: #030303;
-            color: #ffffff;
-            font-family: 'Cinzel', serif;
+        :root {
+            --pool-blue: #00f0ff; 
+            --flamingo-pink: #ff007f; 
+            --sun-yellow: #ffe600; 
+            --lime-green: #00ff66; 
+            --white: #ffffff;
+
+            /* Degradados base tropicales */
+            --grad-envelope: linear-gradient(135deg, #0a2235 0%, #11354c 100%);
+            --grad-hero: linear-gradient(180deg, rgba(10, 28, 42, 0.6) 0%, rgba(0, 196, 209, 0.8) 100%);
+            --grad-details: linear-gradient(180deg, #00c4d1 0%, #0072ff 100%);
+            --grad-location: linear-gradient(180deg, #0072ff 0%, #7a00ff 100%);
+            --grad-info: linear-gradient(180deg, #7a00ff 0%, #ff007f 100%);
+            --grad-rsvp: linear-gradient(180deg, #ff007f 0%, #20003b 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Montserrat", sans-serif;
+            background-color: #20003b;
+            color: var(--white);
             overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
         }
 
-        /* PANTALLA DE INICIO (CARTA BLANCO Y NEGRO) */
-        #intro-screen {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-color: #0a0a0a;
-            z-index: 9999;
+        /* --- EFECTO LETRERO NEÓN EN TÍTULOS --- */
+        h1.neon-title {
+            font-family: "Fredoka One", cursive;
+            color: #fff;
+            text-shadow:
+                0 0 5px #fff,
+                0 0 10px #fff,
+                0 0 20px var(--flamingo-pink),
+                0 0 40px var(--flamingo-pink),
+                0 0 60px var(--flamingo-pink);
+        }
+
+        h2 {
+            font-family: "Fredoka One", cursive;
+            color: var(--white);
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .cursive {
+            font-family: "Pinyon Script", cursive;
+            color: var(--sun-yellow);
+            font-size: 4rem;
+            text-shadow: 0 0 10px rgba(255, 230, 0, 0.5);
+        }
+
+        /* --- GUIRNALDA DE LUCES NEÓN --- */
+        .neon-string {
+            position: absolute;
+            top: 25px;
+            left: 0;
+            width: 100%;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 1.5s ease, visibility 1.5s;
+            justify-content: space-around;
+            padding: 0 5%;
+            z-index: 15;
+            pointer-events: none;
         }
 
-        #intro-screen::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('https://www.dropbox.com/scl/fi/ud1q1raa4y9puuvnt7v6k/IMAGEN2.png?rlkey=grkyxx2efg541cj2eu21gswxd&st=5jcxylpp&raw=1');
-            background-size: cover;
-            background-position: center;
-            filter: grayscale(100%);
-            z-index: -2;
+        .neon-bulb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #fff;
+            position: relative;
+            box-shadow: 0 0 10px #fff;
         }
-        
-        #intro-screen::after {
-            content: '';
+
+        .bulb-pink { box-shadow: 0 0 8px #fff, 0 0 15px var(--flamingo-pink), 0 0 25px var(--flamingo-pink); }
+        .bulb-blue { box-shadow: 0 0 8px #fff, 0 0 15px var(--pool-blue), 0 0 25px var(--pool-blue); }
+        .bulb-yellow { box-shadow: 0 0 8px #fff, 0 0 15px var(--sun-yellow), 0 0 25px var(--sun-yellow); }
+        .bulb-green { box-shadow: 0 0 8px #fff, 0 0 15px var(--lime-green), 0 0 25px var(--lime-green); }
+
+        .neon-string::before {
+            content: "";
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.75);
-            backdrop-filter: blur(8px);
+            top: 6px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.15);
             z-index: -1;
         }
 
-        .envelope-box {
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            padding: 50px 40px;
-            background: rgba(0, 0, 0, 0.85);
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.05);
-            max-width: 400px;
-            width: 80%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.5s ease;
-        }
-
-        .envelope-box:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.8);
-        }
-
-        .icon-letter {
-            width: 70px;
-            height: 70px;
-            margin-bottom: 30px;
-            color: #ffffff;
-            animation: floating 3s ease-in-out infinite;
-            transition: transform 0.4s ease;
-        }
-
-        .envelope-box:hover .icon-letter {
-            transform: scale(1.1) rotate(3deg);
-        }
-
-        @keyframes floating {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-12px); }
-            100% { transform: translateY(0px); }
-        }
-
-        .intro-hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-
-        /* CLASE PARA OCULTAR CONTENIDO (Para el retraso de 3 segundos) */
-        .delayed-content {
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 2s ease, visibility 2s;
-        }
-        
-        .delayed-content.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        /* FONDO DE VIDEO */
-        .video-bg-container {
+        /* --- BURBUJAS --- */
+        #bubbles-container {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 0;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 2;
             overflow: hidden;
         }
 
-        #bgVideo {
+        .bubble {
             position: absolute;
-            top: 50%; left: 50%;
-            width: 100vw; height: 100vh;
-            object-fit: cover;
-            transform: translate(-50%, -50%);
-            filter: grayscale(100%);
-        }
-
-        .video-overlay {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.85));
-            z-index: 1;
-        }
-
-        /* INTERFAZ UI (ESQUINAS) */
-        .ui-layer {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 100;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.1) 40%, rgba(0, 240, 255, 0.25) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.3);
             pointer-events: none;
-            padding: 30px;
-            box-sizing: border-box;
-            font-family: 'Montserrat', sans-serif;
-            font-size: clamp(0.5rem, 2vw, 0.65rem);
-            letter-spacing: 3px;
-            text-transform: uppercase;
         }
 
-        .ui-top { position: absolute; top: 30px; left: 30px; right: 30px; display: flex; justify-content: space-between; }
-        .ui-bottom { position: absolute; bottom: 30px; left: 30px; right: 30px; display: flex; justify-content: space-between; align-items: flex-end; }
-
-        /* REPRODUCTOR DE SONIDO */
-        .music-player {
-            pointer-events: auto;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 10px 20px;
-            border-radius: 50px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .music-player:hover { background: rgba(255, 255, 255, 0.2); }
-        .visualizer { display: flex; gap: 3px; align-items: flex-end; height: 15px; }
-        .bar { width: 3px; background: #fff; animation: bounce 1s infinite alternate; }
-        .bar:nth-child(2) { animation-delay: 0.2s; }
-        .bar:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes bounce { from { height: 3px; } to { height: 15px; } }
-        .paused .bar { animation: none; height: 3px; }
-
-        /* SECCIONES DE SCROLL */
-        .scroll-container { position: relative; z-index: 10; }
-        .slide {
+        /* --- SOBRE INICIAL --- */
+        #envelope-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
             height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 20px;
+            background: var(--grad-envelope);
+            z-index: 1000;
+            perspective: 1200px;
+            transform-style: preserve-3d;
+            overflow: hidden;
         }
 
-        .slide-content {
-            will-change: transform, opacity;
+        .bg-video-envelope {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            pointer-events: none;
         }
 
-        h1 {
-            font-size: clamp(2.5rem, 12vw, 6rem);
-            letter-spacing: clamp(5px, 3vw, 15px);
-            font-weight: 400;
-            line-height: 1;
-            text-shadow: 0 10px 50px rgba(0,0,0,0.9);
-            margin: 10px 0;
-        }
-
-        h3 {
-            font-size: clamp(1.5rem, 6vw, 3rem);
-            letter-spacing: clamp(3px, 2vw, 8px);
-            font-weight: 400;
-            color: #ffffff;
-            margin-bottom: 10px;
-            text-shadow: 0 5px 20px rgba(0,0,0,0.8);
-        }
-
-        .p-text {
-            font-family: 'Montserrat', sans-serif;
-            font-size: clamp(0.7rem, 2.5vw, 1rem);
-            letter-spacing: 3px;
-            margin-top: 15px;
-            opacity: 0.8;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.6;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
-        }
-
-        .btn {
-            pointer-events: auto;
-            margin-top: 10px;
-            padding: 18px 40px;
-            background: transparent;
-            border: 1px solid #ffffff;
-            color: #ffffff;
-            font-family: 'Montserrat', sans-serif;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            font-size: 0.75rem;
+        /* =========================================================
+           [CSS: CONFIGURACIÓN DE TAMAÑO DEL SOBRE]
+           Si cambias las dimensiones de aquí, debes adaptarlas abajo.
+           ========================================================= */
+        .moving-target {
+            position: absolute;
+            width: 130px;   /* Ancho del bloque total móvil */
+            height: 110px;  /* Alto total (Contenedor sobre + texto de abajo) */
+            transform-style: preserve-3d;
             cursor: pointer;
-            transition: 0.4s;
-            width: 100%;
-            max-width: 300px;
+            z-index: 2;
         }
-        .btn:hover { background: #ffffff; color: #000000; }
-        .btn-bw { border-color: #ffffff; color: #ffffff; }
 
-        /* ESTILOS DE LA CUENTA REGRESIVA */
-        .countdown-wrapper {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 30px;
+        .envelope-container {
+            position: relative;
+            width: 260px;   /* Ancho real del sobre */
+            height: 180px;  /* Alto real del sobre */
+            transform-style: preserve-3d;
         }
-        .time-box {
+
+        .envelope {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a3a52 0%, #0a1c28 100%);
+            border: 3px solid var(--pool-blue);
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 240, 255, 0.35);
+            z-index: 2;
+            transition: border-color 0.2s ease;
+        }
+
+        .flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            /* Triángulo de la solapa: (Ancho del sobre / 2) - menos los bordes */
+            border-left: 127px solid transparent;
+            border-right: 127px solid transparent;
+            border-top: 90px solid var(--pool-blue);
+            transform-origin: top;
+            z-index: 5;
+        }
+
+        .letter {
+            position: absolute;
+            top: 10px;
+            left: 11px;
+            width: 232px;  /* Ancho interno de la carta extraíble */
+            height: 156px; /* Alto interno de la carta extraíble */
+            background: linear-gradient(135deg, #ff007f 0%, #7a00ff 100%);
+            border-radius: 8px;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            border: 2px solid #fff;
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.4);
+            transform: translateZ(-1px);
+        }
+
+        .letter h3 {
+            font-family: 'Fredoka One', cursive;
+            color: var(--sun-yellow);
+            font-size: 1.4rem;
+            margin-bottom: 4px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .envelope-text {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            font-family: "Fredoka One", cursive;
+            font-size: 1.4rem;
+            color: var(--white);
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+            z-index: 4;
+        }
+
+        .click-hint {
+            margin-top: 15px;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            color: var(--pool-blue);
+            animation: pulse 1.5s infinite alternate;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            text-align: center;
+            transition: color 0.2s ease;
+        }
+
+        /* --- CONTENIDO PRINCIPAL --- */
+        #main-content {
+            opacity: 0;
+            visibility: hidden;
+            display: none;
+        }
+
+        section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 140px 20px 160px;
+            position: relative;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 3;
+            width: 100%;
+            max-width: 800px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 15px 10px;
-            min-width: 70px;
+            justify-content: center;
+        }
+
+        .wave-divider {
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+            z-index: 4;
+            transform-origin: bottom;
+        }
+
+        .wave-divider svg {
+            position: relative;
+            display: block;
+            width: calc(130% + 1.3px);
+            height: 100px;
+        }
+
+        .hero {
+            background: var(--grad-hero), url("https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&q=80&w=1920") no-repeat center center/cover;
+        }
+        .hero h1 { font-size: 5.5rem; line-height: 1; margin: 20px 0 15px; }
+        .hero p { font-size: 1.1rem; font-weight: bold; letter-spacing: 4px; }
+
+        .details-section { background: var(--grad-details); }
+        .location-section { background: var(--grad-location); }
+        .info-section { background: var(--grad-info); gap: 30px; }
+        .rsvp-section { background: var(--grad-rsvp); }
+
+        .counter-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 40px;
+        }
+
+        .time-box {
+            background: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(5px);
+            border: 2px solid var(--white);
+            padding: 20px;
+            border-radius: 25px;
+            min-width: 95px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
+
         .time-box span {
-            font-size: clamp(1.5rem, 5vw, 2.5rem);
-            font-family: 'Cinzel', serif;
-            font-weight: 600;
-        }
-        .time-box p {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.6rem;
-            letter-spacing: 2px;
-            margin: 5px 0 0 0;
-            opacity: 0.7;
-        }
-        @media (max-width: 500px) {
-            .countdown-wrapper { gap: 8px; }
-            .time-box { min-width: 55px; padding: 10px 5px; }
+            display: block;
+            font-size: 2.5rem;
+            font-family: "Fredoka One", cursive;
+            color: var(--sun-yellow);
         }
 
-        /* ANIMACIÓN Y EFECTO NEÓN PARA KEVIN */
-        @keyframes pulse-neon {
-            0% {
-                text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #00ff00, 0 0 30px #00ff00, 0 0 40px #00ff00;
-                transform: scale(1);
-            }
-            50% {
-                text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #39ff14, 0 0 40px #39ff14, 0 0 60px #39ff14, 0 0 80px #39ff14;
-                transform: scale(1.05);
-            }
-            100% {
-                text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #00ff00, 0 0 30px #00ff00, 0 0 40px #00ff00;
-                transform: scale(1);
-            }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            padding: 40px 30px;
+            border-radius: 35px;
+            max-width: 600px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
         }
 
-        .neon-pulse {
-            color: #39ff14;
+        .info-card {
+            background: rgba(0, 0, 0, 0.2);
+            border: 2px dashed var(--sun-yellow);
+            border-radius: 25px;
+            max-width: 400px;
+            padding: 35px;
+        }
+
+        .info-card i {
+            font-size: 3.5rem;
+            color: var(--sun-yellow);
+            margin-bottom: 15px;
+        }
+
+        .btn {
             display: inline-block;
-            animation: pulse-neon 1.5s infinite ease-in-out;
+            margin-top: 25px;
+            padding: 16px 40px;
+            background-color: var(--sun-yellow);
+            color: #20003b;
+            text-decoration: none;
+            font-weight: bold;
+            font-family: "Fredoka One", cursive;
+            letter-spacing: 1px;
+            border-radius: 50px;
+            box-shadow: 0 8px 25px rgba(255, 230, 0, 0.4);
         }
 
+        .btn-whatsapp {
+            background-color: #25d366;
+            color: var(--white);
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+        }
+
+        #music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--sun-yellow);
+            color: #20003b;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 999;
+            box-shadow: 0 0 20px var(--sun-yellow);
+            display: none;
+            font-size: 1.3rem;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.7; }
+            100% { transform: scale(1.05); opacity: 1; }
+        }
     </style>
 </head>
 <body>
+    <!-- AUDIO GLOBAL -->
+    <audio id="bg-music" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" type="audio/mpeg" />
+    </audio>
 
-    <div class="video-bg-container">
-        <video id="bgVideo" loop playsinline>
-            <source src="https://www.dropbox.com/scl/fi/g93o3du2g85retbl81xk8/Video-Project-5.mp4?rlkey=couiznu8vjhs7z44l0wchgc80&st=00xgqhzz&raw=1" type="video/mp4">
-        </video>
-        <div class="video-overlay"></div>
+    <!-- CONTROL AUDIO -->
+    <div id="music-control">
+        <i class="fas fa-volume-up"></i>
     </div>
 
-    <div id="intro-screen">
-        <div class="envelope-box">
-            <div class="icon-letter">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21.2 8.4c.5.38.8.97.8 1.6v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V10a2 2 0 0 1 .8-1.6l8-6a2 2 0 0 1 2.4 0l8 6z"></path>
-                    <polyline points="22.7 8.5 12 16.5 1.3 8.5"></polyline>
+    <!-- SOBRE DE BIENVENIDA -->
+    <div id="envelope-wrapper">
+        <video class="bg-video-envelope" autoplay loop muted playsinline>
+            <source src="1.mp4" type="video/mp4" />
+        </video>
+
+        <!-- Bloque completo móvil -->
+        <div class="moving-target" id="moving-target">
+            <div class="envelope-container" id="interactive-envelope">
+                <div class="flap" id="envelope-flap"></div>
+                <div class="letter" id="envelope-letter">
+                    <h3>¡Pool Party!</h3>
+                    <p style="font-size: 0.8rem; font-weight: bold; text-align: center; color: #fff; letter-spacing: 1px;">✨ ESTÁS INVITADO(A) ✨</p>
+                </div>
+                <div class="envelope" id="envelope-base"></div>
+                <div class="envelope-text" id="envelope-txt">Nohemi 🏖️</div>
+            </div>
+            <div class="click-hint" id="envelope-hint">
+                <i class="fas fa-hand-pointer"></i> PRESIONA PARA ABRIR
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTENIDO GENERAL DE LA INVITACIÓN -->
+    <div id="main-content">
+        <div id="bubbles-container"></div>
+
+        <!-- 1. PORTADA -->
+        <section class="hero" id="sec-hero">
+            <div class="neon-string">
+                <div class="neon-bulb bulb-pink"></div>
+                <div class="neon-bulb bulb-blue"></div>
+                <div class="neon-bulb bulb-yellow"></div>
+                <div class="neon-bulb bulb-green"></div>
+                <div class="neon-bulb bulb-pink"></div>
+                <div class="neon-bulb bulb-blue"></div>
+                <div class="neon-bulb bulb-yellow"></div>
+                <div class="neon-bulb bulb-green"></div>
+            </div>
+
+            <div class="content-wrapper animate-hero">
+                <p>¡PREPÁRATE PARA LA MEJOR FIESTA DEL AÑO!</p>
+                <span class="cursive">Mis 15 Años</span>
+                <h1 class="neon-title" id="main-neon-title">Nohemi</h1>
+                <p style="color: var(--sun-yellow); font-size: 1.4rem; letter-spacing: 2px;">• POOL PARTY STYLE •</p>
+            </div>
+
+            <div class="wave-divider">
+                <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+                    <path class="wave-back" fill="rgba(0, 196, 209, 0.4)" d="M0,32L120,42.7C240,53,480,75,720,74.7C960,75,1200,53,1320,42.7L1440,32L1440,120L1320,120C1200,120,960,120,720,120C480,120,240,120,120,120L0,120Z"></path>
+                    <path class="wave-front" fill="#00c4d1" d="M0,64L120,58.7C240,53,480,43,720,53.3C960,64,1200,96,1320,101.3L1440,106L1440,120L1320,120C1200,120,960,120,720,120C480,120,240,120,120,120L0,120Z"></path>
                 </svg>
             </div>
-            <button class="btn btn-bw" onclick="startExperience()">ABRIR INVITACIÓN</button>
-        </div>
-    </div>
-
-    <div class="ui-layer delayed-content" id="main-ui">
-        <div class="ui-top">
-            <span>KEVIN FEST // 2026</span>
-            <span>INVITACIÓN</span>
-        </div>
-        <div class="ui-bottom">
-            <div class="music-player paused" id="musicBtn" onclick="toggleSound()">
-                <div class="visualizer">
-                    <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-                </div>
-                <span id="musicText">SOUND OFF</span>
-            </div>
-            <span>[ SCROLL ]</span>
-        </div>
-    </div>
-
-    <div class="scroll-container delayed-content" id="main-content">
-        
-        <section class="slide">
-            <div class="slide-content">
-                <p class="p-text" style="font-size: 0.7rem;">VEN Y CELEBRA CONMIGO</p>
-                <!-- AQUÍ SE APLICÓ LA CLASE neon-pulse A KEVIN -->
-                <h1>cumpleaños <span class="neon-pulse">KEVIN</span><br>No. 28!!!</h1>
-            </div>
         </section>
 
-        <section class="slide">
-            <div class="slide-content">
-                <p class="p-text">"Freaking out the neighborhood..."</p>
-                <p class="p-text" style="margin-top: 30px;">UNA CELEBRACIÓN DIFERENTE.<br>SIN REGLAS, SOLO AMOR Y BUENA MÚSICA.</p>
+        <!-- 2. CUENTA REGRESIVA -->
+        <section class="details-section" id="sec-details">
+            <div class="neon-string">
+                <div class="neon-bulb bulb-green"></div>
+                <div class="neon-bulb bulb-yellow"></div>
+                <div class="neon-bulb bulb-blue"></div>
+                <div class="neon-bulb bulb-pink"></div>
+                <div class="neon-bulb bulb-green"></div>
+                <div class="neon-bulb bulb-yellow"></div>
+                <div class="neon-bulb bulb-blue"></div>
+                <div class="neon-bulb bulb-pink"></div>
             </div>
-        </section>
 
-        <section class="slide">
-            <div class="slide-content">
-                <h3>NUESTRA HISTORIA</h3>
-                <p class="p-text">Dos caminos que se cruzaron de la manera más inesperada.<br>Hoy, decidimos caminar en la misma dirección para siempre.</p>
-            </div>
-        </section>
+            <div class="content-wrapper core-details">
+                <h2>¿Cuánto falta para el clavado?</h2>
+                <p style="font-size: 1.5rem; font-weight: bold; margin: 15px 0; color: #20003b; letter-spacing: 1px;">
+                    DOMINGO, 26 DE JULIO DEL 2026
+                </p>
+                <p style="font-weight: 600">¡Te veo en el agua a partir de las 2:00 PM!</p>
 
-        <section class="slide">
-            <div class="slide-content">
-                <h2 style="font-size: 2rem; color:#ffffff; margin-bottom: 20px;">15 . NOV</h2>
-                <h1>ZAPOPAN</h1>
-                <p class="p-text">CEREMONIA | SAN PEDRO APÓSTOL | 4:00 PM<br>RECEPCIÓN | HACIENDA LA ESCOBA | 6:00 PM</p>
-                <button class="btn" style="margin-top: 30px;" onclick="window.open('https://wa.me/523332577128?text=Confirmo%20asistencia')">CONFIRMAR ASISTENCIA</button>
-            </div>
-        </section>
-
-        <section class="slide">
-            <div class="slide-content">
-                <h3>FALTAN</h3>
-                <div class="countdown-wrapper" id="countdown">
-                    <div class="time-box"><span id="days">00</span><p>DÍAS</p></div>
-                    <div class="time-box"><span id="hours">00</span><p>HRS</p></div>
-                    <div class="time-box"><span id="minutes">00</span><p>MIN</p></div>
-                    <div class="time-box"><span id="seconds">00</span><p>SEG</p></div>
+                <div class="counter-container">
+                    <div class="time-box">
+                        <span id="days">00</span>
+                        <p style="font-size: 0.8rem; font-weight: bold; color: #20003b">DÍAS</p>
+                    </div>
+                    <div class="time-box">
+                        <span id="hours">00</span>
+                        <p style="font-size: 0.8rem; font-weight: bold; color: #20003b">HORAS</p>
+                    </div>
+                    <div class="time-box">
+                        <span id="minutes">00</span>
+                        <p style="font-size: 0.8rem; font-weight: bold; color: #20003b">MINUTOS</p>
+                    </div>
                 </div>
             </div>
-        </section>
 
-        <section class="slide">
-            <div class="slide-content">
-                <h3>GUEST DJ</h3>
-                <p class="p-text">La pista de baile nos espera.<br>Contaremos con un DJ invitado en vivo para asegurar que la música y la energía no paren en toda la noche.</p>
+            <div class="wave-divider">
+                <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+                    <path class="wave-back" fill="rgba(0, 85, 255, 0.4)" d="M0,64L120,58.7C240,53,480,43,720,53.3C960,64,1200,96,1320,101.3L1440,106L1440,120L1320,120C1200,120,960,120,720,120C480,120,240,120,120,120L0,120Z"></path>
+                    <path class="wave-front" fill="#0072ff" d="M0,96L120,85.3C240,75,480,53,720,53.3C960,53,1200,75,1320,80L1440,85L1440,120L1320,120C1200,120,960,120,720,120C480,120,240,120,120,120L0,120Z"></path>
+                </svg>
             </div>
         </section>
 
-        <section class="slide">
-            <div class="slide-content">
-                <h3>DRESS CODE</h3>
-                <p class="p-text">FORMAL / BLACK TIE OPCIONAL<br>Vístete para impresionar y prepárate para bailar toda la noche.</p>
+        <!-- 3. LUGAR -->
+        <section class="location-section" id="sec-location">
+            <div class="neon-string">
+                <div class="neon-bulb bulb-blue"></div>
+                <div class="neon-bulb bulb-pink"></div>
+                <div class="neon-bulb bulb-green"></div>
+                <div class="neon-bulb bulb-yellow"></div>
+                <div class="neon-bulb bulb-blue"></div>
+                <div class="neon-bulb bulb-pink"></div>
+                <div class="neon-bulb bulb-green"></div>
+                <div class="neon-bulb bulb-yellow"></div>
+            </div>
+
+            <div class="content-wrapper core-location">
+                <div class="glass-card">
+                    <h2 style="color: var(--sun-yellow); margin-bottom: 10px">¿Dónde será?</h2>
+                    <p style="font-size: 1.6rem; font-weight: 700; margin-bottom: 15px">Terraza Chic</p>
+                    <p style="line-height: 1.7; font-size: 1.05rem">¡Tendremos la oportunidad de convivir sobre el agua!</p>
+                    <p style="margin-top: 20px; font-weight: bold; color: var(--pool-blue);">
+                        <i class="fas fa-map-marker-alt"></i> Av. De las Rosas #123, Zapopan, Jal.
+                    </p>
+                    <a href="https://www.google.com/maps/place/Terraza+Chic/@20.671692,-103.284312,17z/" target="_blank" class="btn"><i class="fas fa-location-arrow"></i> VER EN MAPA</a>
+                </div>
+            </div>
+
+            <div class="wave-divider">
+                <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+                    <path class="wave-back" fill="rgba(94, 0, 255, 0.4)" d="M0,96L120,85.3C240,75,480,53,720,53.3C960,53,1200,75,1320,80L1440,85L1440,120L1320,120C1200,120,960,120,720,120C480,120,240,120,120,120L0,120Z"></path>
+                    <path class="wave-front" fill="#7a00ff" d="M0,32L120,42.7C240,53,480,75,720,74.7C960,75,1200,53,1320,42.7L1440,32L1440,120L1320,120C1200,120,960,120,720,120C480,120,240,120,120,120L0,120Z"></path>
+                </svg>
             </div>
         </section>
 
-        <section class="slide">
-            <div class="slide-content">
-                <h3>MESA DE REGALOS</h3>
-                <p class="p-text">Su presencia es nuestro regalo más grande.<br>Si desean tener un detalle adicional con nosotros, pueden encontrar opciones a continuación.</p>
-                <button class="btn" style="margin-top: 30px;">VER OPCIONES</button>
+        <!-- 4. DRESS CODE & REGALOS -->
+        <section class="info-section" id="sec-info">
+            <div class="content-wrapper core-info" style="flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 30px;">
+                <div class="info-card">
+                    <i class="fas fa-tshirt"></i>
+                    <h3>Outfit Pool Chic</h3>
+                    <p style="margin-top: 10px; line-height: 1.6">
+                        Trae tu ropa playera más cool y **tu traje de baño**. ¡Habrá cambiadores disponibles en la terraza!
+                    </p>
+                </div>
+
+                <div class="info-card" style="border-color: var(--pool-blue)">
+                    <i class="fas fa-gift" style="color: var(--pool-blue)"></i>
+                    <h3 style="color: var(--pool-blue)">Lluvia de Sobres</h3>
+                    <p style="margin-top: 10px; line-height: 1.6">
+                        Tu asistencia es mi mejor regalo. Si deseas obsequiarme algo, puedes hacerlo dentro de un sobre el día de la fiesta.
+                    </p>
+                </div>
+            </div>
+
+            <div class="wave-divider">
+                <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+                    <path class="wave-back" fill="rgba(255, 0, 102, 0.4)" d="M0,32L120,42.7C240,53,480,75,720,74.7C960,75,1200,53,1320,42.7L1440,32L1440,120L1320,120C1200,120,960,120,720,120C480,120,240,120,120,120L0,120Z"></path>
+                    <path class="wave-front" fill="#ff007f" d="M0,64L120,58.7C240,53,480,43,720,53.3C960,64,1200,96,1320,101.3L1440,106L1440,120L1320,120C1200,120,960,120,720,120C480,120,240,120,120,120L0,120Z"></path>
+                </svg>
+            </div>
+        </section>
+
+        <!-- 5. CONFIRMACIÓN (RSVP) -->
+        <section class="rsvp-section" id="sec-rsvp">
+            <div class="neon-string">
+                <div class="neon-bulb bulb-yellow"></div>
+                <div class="neon-bulb bulb-green"></div>
+                <div class="neon-bulb bulb-pink"></div>
+                <div class="neon-bulb bulb-blue"></div>
+                <div class="neon-bulb bulb-yellow"></div>
+                <div class="neon-bulb bulb-green"></div>
+                <div class="neon-bulb bulb-pink"></div>
+                <div class="neon-bulb bulb-blue"></div>
+            </div>
+
+            <div class="content-wrapper animate-rsvp">
+                <span class="cursive">¡Te Esperamos!</span>
+                <h2 style="font-size: 3.5rem; margin: 10px 0 20px">¿Pasarás al agua?</h2>
+                <p style="max-width: 500px; margin: 0 auto 30px; line-height: 1.7; font-size: 1.1rem;">
+                    Ayúdanos a tener listos tus drinks confirmando antes del 1 de Octubre. ¡Dale clic abajo!
+                </p>
+
+                <a href="https://wa.me/523324396908?text=%C2%A1Hola!%20Confirmo%20mi%20asistencia%20a%20tu%20Pool%20Party%20de%2015%20a%C3%B1os%20%F0%9F%8F%8A%E2%80%8D%E2%99%82%EF%B8%8F%F0%9F%A6%A9" target="_blank" class="btn btn-whatsapp">
+                    <i class="fab fa-whatsapp" style="font-size: 1.4rem; vertical-align: middle; margin-right: 8px;"></i> CONFIRMAR ASISTENCIA
+                </a>
             </div>
         </section>
     </div>
 
     <script>
-        const video = document.getElementById('bgVideo');
-        const musicBtn = document.getElementById('musicBtn');
-        const musicText = document.getElementById('musicText');
-        const introScreen = document.getElementById('intro-screen');
-        const mainUI = document.getElementById('main-ui');
+        gsap.registerPlugin(ScrollTrigger);
+
+        const movingTarget = document.getElementById('moving-target');
+        const flap = document.getElementById('envelope-flap');
+        const letter = document.getElementById('envelope-letter');
+        const wrapper = document.getElementById('envelope-wrapper');
         const mainContent = document.getElementById('main-content');
+        const music = document.getElementById('bg-music');
+        const musicCtrl = document.getElementById('music-control');
+        const bubblesContainer = document.getElementById('bubbles-container');
 
-        // FUNCIÓN PARA INICIAR LA EXPERIENCIA
-        function startExperience() {
-            // 1. Ocultar pantalla inicial
-            introScreen.classList.add('intro-hidden');
-            
-            // 2. Reproducir el video con sonido
-            video.muted = false;
-            video.play().then(() => {
-                musicBtn.classList.remove('paused');
-                musicText.innerText = "SOUND ON";
-            }).catch(error => {
-                console.log("El autoplay del video falló: ", error);
-            });
+        // =========================================================
+        // [JAVASCRIPT: CONFIGURACIÓN DE TAMAÑO Y VELOCIDAD]
+        // =========================================================
+        const rectWidth = 260;  /* Debe coincidir exactamente con el width de .moving-target en CSS */
+        const rectHeight = 230; /* Debe coincidir exactamente con el height de .moving-target en CSS */
 
-            // 3. Esperar 3 segundos antes de mostrar el contenido
-            setTimeout(() => {
-                mainUI.classList.add('show');
-                mainContent.classList.add('show');
-            }, 3000);
+        let w = window.innerWidth;
+        let h = window.innerHeight;
+
+        // Iniciar centrado
+        let posX = (w - rectWidth) / 2;
+        let posY = (h - rectHeight) / 2;
+
+        // VELOCIDAD: Modifica estos números (un valor más alto = rebota más rápido)
+        let vx = 4.5; 
+        let vy = 4.5; 
+
+        if (Math.random() > 0.5) vx *= -1;
+        if (Math.random() > 0.5) vy *= -1;
+
+        const neonColors = ['#00f0ff', '#ff007f', '#ffe600', '#00ff66'];
+
+        function changeNeonColor() {
+            const randomColor = neonColors[Math.floor(Math.random() * neonColors.length)];
+            gsap.to('#envelope-base', { borderColor: randomColor, duration: 0.2 });
+            gsap.to('#envelope-hint', { color: randomColor, duration: 0.2 });
         }
 
-        // CONTROL MANUAL DE SONIDO DEL VIDEO
-        function toggleSound() {
-            if (video.muted) {
-                video.muted = false;
-                musicBtn.classList.remove('paused');
-                musicText.innerText = "SOUND ON";
-            } else {
-                video.muted = true;
-                musicBtn.classList.add('paused');
-                musicText.innerText = "MUTED";
-            }
+        function updateEnvelopePhysics() {
+            w = window.innerWidth;
+            h = window.innerHeight;
+
+            posX += vx;
+            posY += vy;
+
+            if (posX <= 0) { posX = 0; vx *= -1; changeNeonColor(); }
+            else if (posX >= w - rectWidth) { posX = w - rectWidth; vx *= -1; changeNeonColor(); }
+
+            if (posY <= 0) { posY = 0; vy *= -1; changeNeonColor(); }
+            else if (posY >= h - rectHeight) { posY = h - rectHeight; vy *= -1; changeNeonColor(); }
+
+            gsap.set(movingTarget, { x: posX, y: posY });
         }
 
-        // LOGICA DE LA CUENTA REGRESIVA
-        // Configura aquí la fecha de la boda (Mes Día, Año Hora)
-        const targetDate = new Date("Nov 15, 2026 16:00:00").getTime();
+        gsap.ticker.add(updateEnvelopePhysics);
 
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const distance = targetDate - now;
+        // --- APERTURA ---
+        movingTarget.addEventListener('click', () => {
+            gsap.ticker.remove(updateEnvelopePhysics);
 
-            if (distance < 0) {
-                document.getElementById('countdown').innerHTML = "<p class='p-text'>¡HA LLEGADO EL DÍA!</p>";
-                return;
-            }
+            let centerScreenX = (window.innerWidth - rectWidth) / 2;
+            let centerScreenY = (window.innerHeight - rectHeight) / 2;
 
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById("days").innerText = days.toString().padStart(2, '0');
-            document.getElementById("hours").innerText = hours.toString().padStart(2, '0');
-            document.getElementById("minutes").innerText = minutes.toString().padStart(2, '0');
-            document.getElementById("seconds").innerText = seconds.toString().padStart(2, '0');
-        }
-
-        setInterval(updateCountdown, 1000);
-        updateCountdown(); // Llamar inmediatamente para evitar que se vea 00 inicial
-
-        // MOTOR DE ANIMACIÓN TEXTO AL HACER SCROLL
-        function animate() {
-            const h = window.innerHeight;
-            
-            document.querySelectorAll('.slide').forEach((slide) => {
-                const rect = slide.getBoundingClientRect();
-                const progress = -rect.top / h;
-                const content = slide.querySelector('.slide-content');
-
-                if (progress > -1.2 && progress < 1.2) {
-                    if (content) {
-                        content.style.opacity = Math.max(0, 1 - Math.abs(progress * 1.5));
-                        content.style.transform = `translateY(${progress * 50}px)`;
-                    }
+            let openTimeline = gsap.timeline({
+                onComplete: () => {
+                    wrapper.style.display = 'none';
+                    initScrollTriggerAndEffects();
                 }
             });
-            requestAnimationFrame(animate);
+
+            openTimeline
+                .to(flap, { duration: 0.5, rotateX: 180, borderTopColor: "#00a3af", ease: "power2.inOut" })
+                .to(letter, { duration: 0.7, y: -130, z: 50, scale: 1.05, ease: "back.out(1.2)" }, "-=0.1")
+                .to({}, { duration: 2.5 }) 
+                .to(movingTarget, { 
+                    duration: 1.2, 
+                    scale: 3.5, 
+                    z: 400, 
+                    x: centerScreenX, 
+                    y: centerScreenY, 
+                    opacity: 0, 
+                    ease: "power2.inOut" 
+                })
+                .to(wrapper, { duration: 0.7, opacity: 0, ease: "power2.out" }, "-=0.8")
+                .set(mainContent, { display: "block", opacity: 1, visibility: "visible" }, "-=0.7")
+                .from('.animate-hero *', { duration: 1.2, y: 50, opacity: 0, stagger: 0.2, ease: "power3.out" }, "-=0.2");
+
+            music.play().then(() => {
+                musicCtrl.style.display = "flex";
+            }).catch(err => console.log("Audio esperando interactividad."));
+        });
+
+        musicCtrl.addEventListener('click', () => {
+            if (music.paused) {
+                music.play();
+                musicCtrl.innerHTML = '<i class="fas fa-volume-up"></i>';
+            } else {
+                music.pause();
+                musicCtrl.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            }
+        });
+
+        function initScrollTriggerAndEffects() {
+            gsap.to(".wave-front", { x: "-=120", y: "+=10", duration: 1.2, repeat: -1, yoyo: true, ease: "sine.inOut" });
+            gsap.to(".wave-back", { x: "+=90", y: "-=8", duration: 1.6, repeat: -1, yoyo: true, ease: "sine.inOut" });
+
+            ScrollTrigger.create({
+                onUpdate: (self) => {
+                    let velocity = Math.abs(self.getVelocity() / 1600);
+                    gsap.to(".wave-divider", { scaleY: 1 + Math.min(velocity, 0.5), duration: 0.3, overwrite: "auto" });
+                }
+            });
+
+            gsap.to(".animate-hero", {
+                yPercent: 40,
+                scale: 0.93,
+                scrollTrigger: { trigger: "#sec-hero", start: "top top", end: "bottom top", scrub: 2 }
+            });
+
+            gsap.from(".core-details", {
+                y: 120,
+                opacity: 0,
+                scrollTrigger: { trigger: "#sec-details", start: "top 95%", end: "top 45%", scrub: 2.5 }
+            });
+
+            gsap.from(".glass-card", {
+                rotationX: 20,
+                y: 140,
+                scale: 0.88,
+                opacity: 0,
+                scrollTrigger: { trigger: "#sec-location", start: "top 95%", end: "top 40%", scrub: 2.5 }
+            });
+
+            gsap.from(".info-card", {
+                x: (i) => i === 0 ? -120 : 120,
+                rotationZ: (i) => i === 0 ? -6 : 6,
+                opacity: 0,
+                scrollTrigger: { trigger: "#sec-info", start: "top 95%", end: "top 50%", scrub: 2.5 }
+            });
+
+            gsap.from(".animate-rsvp *", {
+                y: 60,
+                opacity: 0,
+                stagger: 0.15,
+                scrollTrigger: { trigger: "#sec-rsvp", start: "top 90%", end: "top 55%", scrub: 2 }
+            });
+
+            gsap.to(".neon-bulb", {
+                opacity: "random(0.1, 1)",
+                scale: "random(0.85, 1.15)",
+                duration: "random(0.15, 0.45)",
+                repeat: -1,
+                yoyo: true,
+                stagger: { amount: 1.2, from: "random" },
+                ease: "none"
+            });
+
+            let neonTimeline = gsap.timeline({ repeat: -1, repeatDelay: 4 });
+            neonTimeline.to("#main-neon-title", { opacity: 0.3, duration: 0.1, yoyo: true, repeat: 3 })
+                        .to("#main-neon-title", { opacity: 1, duration: 0.05 })
+                        .to("#main-neon-title", { opacity: 0.5, duration: 0.08 })
+                        .to("#main-neon-title", { opacity: 1, duration: 0.1 });
+
+            for (let i = 0; i < 35; i++) { createBubble(true); }
+            setInterval(() => {
+                if (document.querySelectorAll(".bubble").length < 45) { createBubble(false); }
+            }, 500);
         }
-        requestAnimationFrame(animate);
+
+        function createBubble(isInitial) {
+            const bubble = document.createElement("div");
+            bubble.className = "bubble";
+            const size = Math.random() * 23 + 12;
+            bubble.style.width = `${size}px`;
+            bubble.style.height = `${size}px`;
+
+            const startX = Math.random() * window.innerWidth;
+            const startY = isInitial ? Math.random() * window.innerHeight : window.innerHeight + 50;
+            bubblesContainer.appendChild(bubble);
+
+            gsap.set(bubble, { x: startX, y: startY, opacity: Math.random() * 0.4 + 0.2 });
+
+            gsap.to(bubble, {
+                y: -60,
+                x: `+=${Math.random() * 100 - 50}`,
+                duration: isInitial ? (Math.random() * 7 + 4) * (startY / window.innerHeight) : (Math.random() * 9 + 6),
+                ease: "none",
+                onComplete: () => { bubble.remove(); }
+            });
+        }
+
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('mouseenter', () => {
+                gsap.to(button, { scale: 1.06, duration: 0.3, ease: "elastic.out(1.2, 0.5)" });
+            });
+            button.addEventListener('mouseleave', () => {
+                gsap.to(button, { scale: 1, duration: 0.3, ease: "power2.out" });
+            });
+        });
+
+        const targetDate = new Date("July 26, 2026 14:00:00").getTime();
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const difference = targetDate - now;
+            if (difference > 0) {
+                const d = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                document.getElementById("days").innerText = d < 10 ? "0" + d : d;
+                document.getElementById("hours").innerText = h < 10 ? "0" + h : h;
+                document.getElementById("minutes").innerText = m < 10 ? "0" + m : m;
+            }
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
     </script>
 </body>
 </html>
