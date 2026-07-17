@@ -152,14 +152,10 @@
             pointer-events: none;
         }
 
-        /* =========================================================
-           [CSS: CONFIGURACIÓN DE TAMAÑO DEL SOBRE]
-           Si cambias las dimensiones de aquí, debes adaptarlas abajo.
-           ========================================================= */
         .moving-target {
             position: absolute;
-            width: 130px;   /* Ancho del bloque total móvil */
-            height: 110px;  /* Alto total (Contenedor sobre + texto de abajo) */
+            width: 260px;   
+            height: 230px;  
             transform-style: preserve-3d;
             cursor: pointer;
             z-index: 2;
@@ -167,8 +163,8 @@
 
         .envelope-container {
             position: relative;
-            width: 260px;   /* Ancho real del sobre */
-            height: 180px;  /* Alto real del sobre */
+            width: 260px;   
+            height: 180px;  
             transform-style: preserve-3d;
         }
 
@@ -190,7 +186,6 @@
             left: 0;
             width: 0;
             height: 0;
-            /* Triángulo de la solapa: (Ancho del sobre / 2) - menos los bordes */
             border-left: 127px solid transparent;
             border-right: 127px solid transparent;
             border-top: 90px solid var(--pool-blue);
@@ -202,8 +197,8 @@
             position: absolute;
             top: 10px;
             left: 11px;
-            width: 232px;  /* Ancho interno de la carta extraíble */
-            height: 156px; /* Alto interno de la carta extraíble */
+            width: 232px;  
+            height: 156px; 
             background: linear-gradient(135deg, #ff007f 0%, #7a00ff 100%);
             border-radius: 8px;
             z-index: 3;
@@ -401,7 +396,7 @@
 <body>
     <!-- AUDIO GLOBAL -->
     <audio id="bg-music" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" type="audio/mpeg" />
+        <source src="2.mp3" type="audio/mpeg" />
     </audio>
 
     <!-- CONTROL AUDIO -->
@@ -424,10 +419,7 @@
                     <p style="font-size: 0.8rem; font-weight: bold; text-align: center; color: #fff; letter-spacing: 1px;">✨ ESTÁS INVITADO(A) ✨</p>
                 </div>
                 <div class="envelope" id="envelope-base"></div>
-                <div class="envelope-text" id="envelope-txt">Nohemi 🏖️</div>
-            </div>
-            <div class="click-hint" id="envelope-hint">
-                <i class="fas fa-hand-pointer"></i> PRESIONA PARA ABRIR
+                <div class="envelope-text" id="envelope-txt">ABRE LA INVITACION! 🏖️</div>
             </div>
         </div>
     </div>
@@ -452,7 +444,7 @@
             <div class="content-wrapper animate-hero">
                 <p>¡PREPÁRATE PARA LA MEJOR FIESTA DEL AÑO!</p>
                 <span class="cursive">Mis 15 Años</span>
-                <h1 class="neon-title" id="main-neon-title">Nohemi</h1>
+                <h1 class="neon-title" id="main-neon-title">Noemi</h1>
                 <p style="color: var(--sun-yellow); font-size: 1.4rem; letter-spacing: 2px;">• POOL PARTY STYLE •</p>
             </div>
 
@@ -480,7 +472,7 @@
             <div class="content-wrapper core-details">
                 <h2>¿Cuánto falta para el clavado?</h2>
                 <p style="font-size: 1.5rem; font-weight: bold; margin: 15px 0; color: #20003b; letter-spacing: 1px;">
-                    DOMINGO, 26 DE JULIO DEL 2026
+                    DOMINGO, 25 DE JULIO DEL 2026
                 </p>
                 <p style="font-weight: 600">¡Te veo en el agua a partir de las 2:00 PM!</p>
 
@@ -529,7 +521,7 @@
                     <p style="margin-top: 20px; font-weight: bold; color: var(--pool-blue);">
                         <i class="fas fa-map-marker-alt"></i> Av. De las Rosas #123, Zapopan, Jal.
                     </p>
-                    <a href="https://www.google.com/maps/place/Terraza+Chic/@20.671692,-103.284312,17z/" target="_blank" class="btn"><i class="fas fa-location-arrow"></i> VER EN MAPA</a>
+                    <a href="https://www.google.com/maps/place/Terraza+Chic/@20.6719947,-103.2807457,17z/data=!3m1!4b1!4m6!3m5!1s0x8428b1779464631f:0x6a327eda2f898468!8m2!3d20.6719897!4d-103.2781708!16s%2Fg%2F11ljtw7m2q?entry=ttu&g_ep=EgoyMDI2MDcxNS4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="btn"><i class="fas fa-location-arrow"></i> VER EN MAPA</a>
                 </div>
             </div>
 
@@ -556,7 +548,7 @@
                     <i class="fas fa-gift" style="color: var(--pool-blue)"></i>
                     <h3 style="color: var(--pool-blue)">Lluvia de Sobres</h3>
                     <p style="margin-top: 10px; line-height: 1.6">
-                        Tu asistencia es mi mejor regalo. Si deseas obsequiarme algo, puedes hacerlo dentro de un sobre el día de la fiesta.
+                        Tu asistencia es mi mejor regalo. Si deseas obsequiarme algo, puedes hacerlo y ponerlo en la mesa delos regalos.
                     </p>
                 </div>
             </div>
@@ -584,9 +576,9 @@
 
             <div class="content-wrapper animate-rsvp">
                 <span class="cursive">¡Te Esperamos!</span>
-                <h2 style="font-size: 3.5rem; margin: 10px 0 20px">¿Pasarás al agua?</h2>
+                <h2 style="font-size: 3.5rem; margin: 10px 0 20px">Te atreveras a entrar al agua?</h2>
                 <p style="max-width: 500px; margin: 0 auto 30px; line-height: 1.7; font-size: 1.1rem;">
-                    Ayúdanos a tener listos tus drinks confirmando antes del 1 de Octubre. ¡Dale clic abajo!
+                    Asegúrate de confirmar tu asistencia para que podamos preparar todo para ti. ¡No olvides traer tu mejor actitud y muchas ganas de divertirte!
                 </p>
 
                 <a href="https://wa.me/523324396908?text=%C2%A1Hola!%20Confirmo%20mi%20asistencia%20a%20tu%20Pool%20Party%20de%2015%20a%C3%B1os%20%F0%9F%8F%8A%E2%80%8D%E2%99%82%EF%B8%8F%F0%9F%A6%A9" target="_blank" class="btn btn-whatsapp">
@@ -684,6 +676,9 @@
                 .to(wrapper, { duration: 0.7, opacity: 0, ease: "power2.out" }, "-=0.8")
                 .set(mainContent, { display: "block", opacity: 1, visibility: "visible" }, "-=0.7")
                 .from('.animate-hero *', { duration: 1.2, y: 50, opacity: 0, stagger: 0.2, ease: "power3.out" }, "-=0.2");
+
+            // AJUSTE DE TIEMPO: Forzamos a la canción a iniciar en el segundo 20
+            music.currentTime = 20; 
 
             music.play().then(() => {
                 musicCtrl.style.display = "flex";
@@ -798,7 +793,7 @@
             });
         });
 
-        const targetDate = new Date("July 26, 2026 14:00:00").getTime();
+        const targetDate = new Date("July 25, 2026 14:00:00").getTime();
         function updateCountdown() {
             const now = new Date().getTime();
             const difference = targetDate - now;
